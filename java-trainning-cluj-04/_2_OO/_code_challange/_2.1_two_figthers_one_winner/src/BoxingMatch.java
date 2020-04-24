@@ -8,7 +8,7 @@ public class BoxingMatch {
     }
 
     public String fight(){
-        while (this.fighter1.getHealth() > 0 || this.fighter2.getHealth() > 0){
+        while (this.fighter1.getHealth() > 0 && this.fighter2.getHealth() > 0){
             this.fighter1.attack(this.fighter2);
             if (fighter2.getHealth() <= 0){
                 break;

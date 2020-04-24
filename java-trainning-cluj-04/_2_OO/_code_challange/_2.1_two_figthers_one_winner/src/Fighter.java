@@ -19,8 +19,10 @@ public class Fighter {
 
     public void attack(Fighter opponent){
         opponent.health -= this.getDamagePerAttack();
-        System.out.println( "Fighter " + this.name + " attack " + opponent.getName());
-                //+ '\'' + "opponent health is: " + opponent.getHealth());
+        if (opponent.getHealth() < 0){
+            opponent.setHealth(0);
+        }
+        System.out.println( "Fighter " + this.name + " attack " + opponent.getName() + "\n" + "opponent's life is: " + opponent.getHealth());
     }
 
     public String getName() {
