@@ -1,0 +1,18 @@
+Number 1
+  |
+  |
+Number 2
+ _ 
+ _|
+|_ 
+Number 3
+ _ 
+ _|
+ _|
+Number 4
+|_|
+  |
+Number 5
+ _ 
+|_ 
+ _|
