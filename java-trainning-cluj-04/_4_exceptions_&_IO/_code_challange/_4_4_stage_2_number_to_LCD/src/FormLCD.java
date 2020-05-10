@@ -1,11 +1,13 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FormLCD {
     private byte width;
     private byte height;
-    private List<String> finalForm;
+    private Map<Byte, String[]> numberForm;
 
     private List<String> RightRightM;
     private List<String> LeftLeftM;
@@ -13,6 +15,7 @@ public class FormLCD {
     private List<String> LeftRightU;
     private List<String> lineL;
     private List<String> lineR;
+    private List<String> digitEight;
 
     private String Up = " ";
     private String Right = " ";
@@ -25,13 +28,14 @@ public class FormLCD {
     public FormLCD(Byte width, Byte height) {
         this.width = width;
         this.height = height;
+        this.numberForm = new HashMap<>();
         this.RightRightM = new ArrayList<>();
         this.LeftLeftM = new ArrayList<>();
         this.LeftRightD = new ArrayList<>();
         this.LeftRightU = new ArrayList<>();
         this.lineL = new ArrayList<>();
         this.lineR = new ArrayList<>();
-        this.finalForm = new ArrayList<>();
+        this.digitEight = new ArrayList<>();
 
         create();
     }
@@ -59,7 +63,9 @@ public class FormLCD {
             this.LeftRightU.add(this.Up); // adaugam _
             this.lineL.add(this.Left); // adugam |
             this.lineR.add(this.Right); // adugam |
+            this.digitEight.add(this.Up); // adugam _
             for (byte i = 0; i < add - 1; i++) {
+                this.digitEight.add(this.LeftRight); //Adugam | |
                 this.RightRightM.add(this.Right); // adaugam |
                 this.LeftLeftM.add(this.Left); // adaugam |
                 this.LeftRightD.add(this.LeftRight); // adaugam | |
@@ -72,206 +78,165 @@ public class FormLCD {
             this.LeftLeftM.add(this.LeftM); // adaugam |_
             this.LeftRightD.add(this.RightLeftM); // Adaugam |_|
         }
+
+        this.numberForm.put((byte) 0, display((byte) 0));
+        this.numberForm.put((byte) 1, display((byte) 1));
+        this.numberForm.put((byte) 2, display((byte) 2));
+        this.numberForm.put((byte) 3, display((byte) 3));
+        this.numberForm.put((byte) 4, display((byte) 4));
+        this.numberForm.put((byte) 5, display((byte) 5));
+        this.numberForm.put((byte) 6, display((byte) 6));
+        this.numberForm.put((byte) 7, display((byte) 7));
+        this.numberForm.put((byte) 8, display((byte) 8));
+        this.numberForm.put((byte) 9, display((byte) 9));
     }
 
-    public void displayNumberLCD(byte digit) {
-        if (this.height > 3) {
-            switch (digit) {
-                case 0: {
-                    this.finalForm.add("Number 0");
-                    displayLeftRightU();
-                    displayLeftRightD();
-                    writeOutput();
-                    break;
+    private String[] display(byte digit) {
+        String[] digitForm;
+        switch (digit) {
+            case 0: {
+                digitForm = new String[this.LeftRightU.size() + this.LeftRightD.size()];
+                for (int i = 0; i < this.LeftRightU.size(); i++) {
+                    digitForm[i] = this.LeftRightU.get(i);
                 }
-                case 1: {
-                    this.finalForm.add("Number 1");
-                    displayLineR();
-                    displayLineR();
-                    writeOutput();
-                    break;
+                for (int i = this.LeftRightU.size(), j = 0; j < this.LeftRightD.size(); i++, j++) {
+                    digitForm[i] = this.LeftRightD.get(j);
                 }
-                case 2: {
-                    this.finalForm.add("Number 2");
-                    //System.out.println(this.Up);
-                    this.finalForm.add(this.Up);
-                    displayRightRightM();
-                    displayLeftLeftM();
-                    writeOutput();
-                    break;
-                }
-                case 3: {
-                    this.finalForm.add("Number 3");
-                    //System.out.println(this.Up);
-                    this.finalForm.add(this.Up);
-                    displayRightRightM();
-                    displayRightRightM();
-                    writeOutput();
-                    break;
-                }
-                case 4: {
-                    this.finalForm.add("Number 4");
-                    displayLeftRightD();
-                    displayLineR();
-                    writeOutput();
-                    break;
-                }
-                case 5: {
-                    this.finalForm.add("Number 5");
-                    //System.out.println(this.Up);
-                    this.finalForm.add(this.Up);
-                    displayLeftLeftM();
-                    displayRightRightM();
-                    writeOutput();
-                    break;
-                }
-                case 6: {
-                    //System.out.println(this.Up);
-                    this.finalForm.add("Number 6");
-                    this.finalForm.add(this.Up);
-                    displayLeftLeftM();
-                    displayLeftRightD();
-                    writeOutput();
-                    break;
-                }
-                case 7: {
-                    this.finalForm.add("Number 7");
-                    //System.out.println(this.Up);
-                    this.finalForm.add(this.Up);
-                    displayLineR();
-                    displayLineR();
-                    writeOutput();
-                    break;
-                }
-                case 8: {
-                    this.finalForm.add("Number 8");
-                    displayLeftRightU();
-                    //System.out.println(this.Up);
-                    this.finalForm.add(this.Up);
-                    displayLeftRightD();
-                    writeOutput();
-                    break;
-                }
-                case 9: {
-                    this.finalForm.add("Number 9");
-                    displayLeftRightU();
-                    //System.out.println(this.Up);
-                    this.finalForm.add(this.Up);
-                    displayLineR();
-                    writeOutput();
-                    break;
-                }
-                default: {
-                    System.out.println("Error");
-                }
+                return digitForm;
             }
-        } else {
-            switch (digit) {
-                case 0: {
-                    System.out.println(this.Up);
-                    System.out.println(this.LeftRight);
-                    System.out.println(this.RightLeftM);
-                    break;
+            case 1: {
+                digitForm = new String[1 + this.lineL.size() + this.lineR.size()];
+                digitForm[0] = space();
+                for (int i = 1; i <= this.lineR.size(); i++) {
+                    digitForm[i] = this.lineR.get(i - 1);
                 }
-                case 1: {
-                    System.out.println(this.Right);
-                    System.out.println(this.Right);
-                    break;
+                for (int i = this.lineR.size() + 1, j = 0; j < this.lineR.size(); i++, j++) {
+                    digitForm[i] = this.lineR.get(j);
                 }
-                case 2: {
-                    System.out.println(this.Up);
-                    System.out.println(this.MRight);
-                    System.out.println(this.LeftM);
-                    break;
+                return digitForm;
+            }
+            case 2: {
+                digitForm = new String[1 + this.RightRightM.size() + this.LeftLeftM.size()];
+                digitForm[0] = this.Up;
+                for (int i = 1; i < this.RightRightM.size() + 1; i++) {
+                    digitForm[i] = this.RightRightM.get(i - 1);
                 }
-                case 3: {
-                    System.out.println(this.Up);
-                    System.out.println(this.MRight);
-                    System.out.println(this.MRight);
-                    break;
+                for (int i = this.RightRightM.size() + 1, j = 0; j < this.LeftLeftM.size(); i++, j++) {
+                    digitForm[i] = this.LeftLeftM.get(j);
                 }
-                case 4: {
-                    System.out.println(this.RightLeftM);
-                    System.out.println(this.Right);
-                    break;
+                return digitForm;
+            }
+            case 3: {
+                digitForm = new String[1 + (this.RightRightM.size() * 2)];
+                digitForm[0] = this.Up;
+                for (int i = 1; i < this.RightRightM.size() + 1; i++) {
+                    digitForm[i] = this.RightRightM.get(i - 1);
                 }
-                case 5: {
-                    System.out.println(this.Up);
-                    System.out.println(this.LeftM);
-                    System.out.println(this.MRight);
-                    break;
+                for (int i = this.RightRightM.size() + 1, j = 0; j < this.RightRightM.size(); i++, j++) {
+                    digitForm[i] = this.RightRightM.get(j);
                 }
-                case 6: {
-                    System.out.println(this.Up);
-                    System.out.println(this.LeftM);
-                    System.out.println(this.RightLeftM);
-                    break;
+                return digitForm;
+            }
+            case 4: {
+                digitForm = new String[1 + this.LeftRightD.size() + this.lineR.size()];
+                digitForm[0] = space();
+                for (int i = 1; i < this.LeftRightD.size() + 1; i++) {
+                    digitForm[i] = this.LeftRightD.get(i - 1);
                 }
-                case 7: {
-                    System.out.println(this.Up);
-                    System.out.println(this.Right);
-                    System.out.println(this.Right);
-                    break;
+                for (int i = this.LeftRightD.size() + 1, j = 0; j < this.lineR.size(); i++, j++) {
+                    digitForm[i] = this.lineR.get(j);
                 }
-                case 8: {
-                    System.out.println(this.Up);
-                    System.out.println(this.RightLeftM);
-                    System.out.println(this.RightLeftM);
-                    break;
+                return digitForm;
+            }
+            case 5: {
+                digitForm = new String[1 + this.LeftLeftM.size() + this.RightRightM.size()];
+                digitForm[0] = this.Up;
+                for (int i = 1; i < this.LeftLeftM.size() + 1; i++) {
+                    digitForm[i] = this.LeftLeftM.get(i - 1);
                 }
-                case 9: {
-                    System.out.println(this.Up);
-                    System.out.println(this.RightLeftM);
-                    System.out.println(this.Right);
-                    break;
+                for (int i = this.RightRightM.size() + 1, j = 0; j < this.RightRightM.size(); i++, j++) {
+                    digitForm[i] = this.RightRightM.get(j);
                 }
-                default: {
-                    System.out.println("Error");
+                return digitForm;
+            }
+            case 6: {
+                digitForm = new String[1 + this.LeftLeftM.size() + this.LeftRightD.size()];
+                digitForm[0] = this.Up;
+                for (int i = 1; i < this.LeftLeftM.size() + 1; i++) {
+                    digitForm[i] = this.LeftLeftM.get(i - 1);
                 }
+                for (int i = this.LeftRightD.size() + 1, j = 0; j < this.LeftRightD.size(); i++, j++) {
+                    digitForm[i] = this.LeftRightD.get(j);
+                }
+                return digitForm;
+            }
+            case 7: {
+                digitForm = new String[1 + this.lineR.size() + this.lineR.size()];
+                digitForm[0] = this.Up;
+                for (int i = 1; i < this.lineR.size() + 1; i++) {
+                    digitForm[i] = this.lineR.get(i - 1);
+                }
+                for (int i = this.lineR.size() + 1, j = 0; j < this.lineR.size(); i++, j++) {
+                    digitForm[i] = this.lineR.get(j);
+                }
+                return digitForm;
+            }
+            case 8: {
+                digitForm = new String[this.digitEight.size() * 2];
+                for (int i = 0; i < this.digitEight.size(); i++) {
+                    digitForm[i] = this.digitEight.get(i);
+                }
+                for (int i = this.digitEight.size(), j = 0; j < this.digitEight.size(); i++, j++) {
+                    digitForm[i] = this.digitEight.get(j);
+                }
+                return digitForm;
+            }
+            case 9: {
+                digitForm = new String[this.LeftRightU.size() + this.RightRightM.size()];
+                for (int i = 0; i < this.LeftRightU.size(); i++) {
+                    digitForm[i] = this.LeftRightU.get(i);
+                }
+                for (int i = this.LeftRightU.size() , j = 0; j < this.RightRightM.size(); i++, j++) {
+                    digitForm[i] = this.RightRightM.get(j);
+                }
+                return  digitForm;
+            }
+            default: {
+                System.out.println("Error");
+                return null;
             }
         }
     }
 
-    private void writeOutput() {
-        try {
-            WriteOutput.writeLCD(this.finalForm);
-        } catch (IOException e) {
-            System.out.println("Error: " + e);
+    public void showNumber(List<Byte> digitsNumber) throws IOException {
+        String[][] displayNumber = new String[this.height][digitsNumber.size()];
+        StringBuilder sb = new StringBuilder();
+        byte j = 0;
+        for (byte digit : digitsNumber) {
+            byte i = 0;
+            if (this.numberForm.containsKey(digit)) {
+                String[] formDigit = this.numberForm.get(digit);
+                for (String s : formDigit) {
+                    displayNumber[i][j] = s;
+                    i++;
+                }
+            }
+            j++;
+        }
+        for (int i = 0; i < this.height; i++) {
+            for (int k = 0; k < digitsNumber.size(); k++) {
+                System.out.print(displayNumber[i][k] + "   ");
+                sb.append(displayNumber[i][k]).append("  ");
+            }
+            System.out.println();
+            sb.append('\n');
+            WriteOutput.writeLCD(sb.toString());
         }
     }
 
-    private void displayRightRightM() {
-        for (String form : this.RightRightM) {
-            this.finalForm.add(form);
-            //System.out.println(form);
-        }
-    }
-
-    private void displayLeftLeftM() {
-        for (String form : this.LeftLeftM) {
-            this.finalForm.add(form);
-           // System.out.println(form);
-        }
-    }
-
-    private void displayLeftRightD() {
-        for (String form : this.LeftRightD) {
-            this.finalForm.add(form);
-            //System.out.println(form);
-        }
-    }
-
-    public void displayLeftRightU() {
-        for (String form : this.LeftRightU) {
-            this.finalForm.add(form);
-            //System.out.println(form);
-        }
-    }
-
-    private void displayLineR() {
-        for (String form : this.lineR) {
-            this.finalForm.add(form);
-            //System.out.println(form);
-        }
+    private String space() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" ".repeat(Math.max(0, this.height)));
+        return sb.toString();
     }
 }

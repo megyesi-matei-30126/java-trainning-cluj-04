@@ -13,8 +13,10 @@ public class TestNumberToLCD {
             System.out.println("Error: " + e);
         }
 
-        for (byte digit : digitsList) {
-            formLCD.displayNumberLCD(digit);
+        try {
+            formLCD.displayMultipleDigits(digitsList);
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
         }
     }
 }

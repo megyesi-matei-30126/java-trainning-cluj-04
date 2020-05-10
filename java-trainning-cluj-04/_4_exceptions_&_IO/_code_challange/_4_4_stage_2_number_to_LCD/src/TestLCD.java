@@ -6,6 +6,11 @@ import java.util.Scanner;
 public class TestLCD {
     public static void main(String[] args) {
         /**
+         * Programul nu merge da latime e 1, trebuie o logica suplimentara
+         *
+         * Pentru cifra 8 si 9 la fel trebuie o logica suplimentara
+         * doarece ele depasesc inaltimea
+         *
          * Pentru ca programul sa functioneze bine
          * si pentru o afisare simetrica
          * latimea minimia este 1, iar ianltimea minimia e 3
@@ -15,7 +20,7 @@ public class TestLCD {
          */
         List<Byte> digitsList = new ArrayList<>();
         try {
-         digitsList = ReadInput.readIntput();
+            digitsList = ReadInput.readIntput();
         } catch (IOException e) {
             System.out.println("Error: " + e);
         }
@@ -29,8 +34,10 @@ public class TestLCD {
         scanner.nextLine();
 
         FormLCD formLCD = new FormLCD(width, height);
-        for (byte digit : digitsList) {
-            formLCD.displayNumberLCD(digit);
+        try {
+            formLCD.showNumber(digitsList);
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
         }
     }
 }
