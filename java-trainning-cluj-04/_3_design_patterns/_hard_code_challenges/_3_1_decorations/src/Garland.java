@@ -19,7 +19,6 @@ public class Garland implements GarlandDecorator {
         this.treeWithBulbsAndCandy = getTree();
     }
 
-
     @Override
     public void putGarland() {
         List<String> listModify = this.treeWithBulbsAndCandy.get(this.lineToDecorate);
