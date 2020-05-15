@@ -1,0 +1,4 @@
+Am folosit abstract factory pentru a creea soldatii;
+Fiecare tip de soldat e un soldat, dar e fierit prin calitatile sale: viata, atac si armura;
+Am folost compsite pentru a creea armata
+Am folost observable pentru a observa cand un front este pierdut si pentru a observa care player a castigat;
